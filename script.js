@@ -74,19 +74,18 @@ tabBtnParent.addEventListener('click', function (e) {
     .querySelector(`.operations__content--${target.dataset.tab}`)
     .classList.add('operations__content--active');
 });
-// console.log();
-// document.querySelectorAll('.nav__link').forEach(function (el) {
-//   el.addEventListener('click', function (e) {
-//     e.preventDefault();
-//     const id = this.getAttribute('href');
-//     // console.log(id);
-//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-//   });
-// });
-
-////////////
-// const h1 = document.querySelector('h1');
-
-// h1.addEventListener('mouseenter', e => {
-//   alert('mouse entered');
-// });
+// Menu fade animation //
+const navbar = document.querySelector('.nav');
+const fadeNav = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+navbar.addEventListener('mouseover', fadeNav.bind(0.5));
+navbar.addEventListener('mouseout', fadeNav.bind(1));
