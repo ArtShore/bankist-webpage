@@ -9,6 +9,9 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const tabBtnParent = document.querySelector('.operations');
+const tabBtns = document.querySelectorAll('.operations__tab');
+const tabComps = document.querySelectorAll('.operations__content');
 
 // Modal Window //
 const openModal = function (e) {
@@ -56,30 +59,20 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
   }
 });
 // Tabbed component //
-const tabBtnParent = document.querySelector('.operations');
-const tabBtns = document.querySelectorAll('.operations__tab');
-const tabComps = document.querySelectorAll('.operations__content');
-console.log(tabBtns);
-console.log(tabComps);
+
 tabBtnParent.addEventListener('click', function (e) {
   const target = e.target.closest('.operations__tab');
-  console.log(target);
-  for (let i = 1; i <= tabBtns.length; i++) {
-    if (target.classList.contains(`operations__tab--${i}`)) {
-      for (const comp of tabComps) {
-        comp.classList.remove('operations__content--active');
-        comp.classList.contains(`operations__content--${i}`)
-          ? comp.classList.add('operations__content--active')
-          : 0;
-      }
-      for (const btn of tabBtns) {
-        btn.classList.remove('operations__tab--active');
-        btn.classList.contains(`operations__tab--${i}`)
-          ? btn.classList.add('operations__tab--active')
-          : 0;
-      }
-    }
-  }
+  if (!target) return;
+  // deactivate all tabs
+  tabBtns.forEach(tab => tab.classList.remove('operations__tab--active'));
+  tabComps.forEach(comp =>
+    comp.classList.remove('operations__content--active')
+  );
+  // activate selected tab
+  target.classList.add('operations__tab--active');
+  document
+    .querySelector(`.operations__content--${target.dataset.tab}`)
+    .classList.add('operations__content--active');
 });
 // console.log();
 // document.querySelectorAll('.nav__link').forEach(function (el) {
