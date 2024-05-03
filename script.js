@@ -13,6 +13,7 @@ const tabBtnParent = document.querySelector('.operations');
 const tabBtns = document.querySelectorAll('.operations__tab');
 const tabComps = document.querySelectorAll('.operations__content');
 const navbar = document.querySelector('.nav');
+const header = document.querySelector('.header');
 
 // Modal Window //
 const openModal = function (e) {
@@ -112,9 +113,7 @@ navbar.addEventListener('mouseout', fadeNav.bind(1));
 // };
 // const observer = new IntersectionObserver(obsCallback, obsOpts);
 // observer.observe(section1);
-const header = document.querySelector('.header');
 const navbarHeight = navbar.getBoundingClientRect().height;
-console.log(navbarHeight);
 const navCallback = function (entries, observer) {
   const [entry] = entries;
   if (!entry.isIntersecting) navbar.classList.add('sticky');
@@ -125,6 +124,22 @@ const navOpts = {
   threshold: 0,
   rootMargin: `-${navbarHeight}px`,
 };
-// console.log(header);
 const headerObs = new IntersectionObserver(navCallback, navOpts);
 headerObs.observe(header);
+// revealing animation as you go down the page //
+const allSections = document.querySelectorAll('.section');
+const revealCallback = function (entries, observer) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  observer.observe(entry.target); // for better performance
+};
+const revealObserver = new IntersectionObserver(revealCallback, {
+  root: null,
+  threshold: 0.1,
+});
+
+allSections.forEach(sect => {
+  revealObserver.observe(sect);
+  sect.classList.add('section--hidden');
+});
