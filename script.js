@@ -89,3 +89,14 @@ const fadeNav = function (e) {
 };
 navbar.addEventListener('mouseover', fadeNav.bind(0.5));
 navbar.addEventListener('mouseout', fadeNav.bind(1));
+// Sticky navigation //
+const sectOneCoords = section1.getBoundingClientRect();
+console.log(sectOneCoords);
+window.addEventListener('scroll', function () {
+  // console.log(window.scrollY);
+  if (window.scrollY > sectOneCoords.top) {
+    navbar.classList.add('sticky');
+  } else {
+    navbar.classList.remove('sticky');
+  }
+});
