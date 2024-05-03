@@ -14,7 +14,10 @@ const tabBtns = document.querySelectorAll('.operations__tab');
 const tabComps = document.querySelectorAll('.operations__content');
 const navbar = document.querySelector('.nav');
 const header = document.querySelector('.header');
-
+const sliderBtnRight = document.querySelector('.slider__btn--right');
+const sliderBtnLeft = document.querySelector('.slider__btn--left');
+const slider = document.querySelector('.slider');
+const slides = document.querySelectorAll('.slide');
 // Modal Window //
 const openModal = function (e) {
   e.preventDefault();
@@ -141,7 +144,7 @@ const revealObserver = new IntersectionObserver(revealCallback, {
 
 allSections.forEach(sect => {
   revealObserver.observe(sect);
-  sect.classList.add('section--hidden');
+  // sect.classList.add('section--hidden');
 });
 // lazy loading the images //
 const lazyImgs = document.querySelectorAll('.features__img');
@@ -162,4 +165,67 @@ const lazyLoadObserver = new IntersectionObserver(lazyLoadCallback, {
 });
 lazyImgs.forEach(img => {
   lazyLoadObserver.observe(img);
+});
+// slider implementation //
+const dotBox = document.querySelector('.dots');
+let currentSlide = 0;
+const maxSlide = slides.length;
+
+const createDots = function () {
+  slides.forEach(function (_, i) {
+    dotBox.insertAdjacentHTML(
+      'beforeend',
+      `<button class="dots__dot" data-slide="${i}"></button>`
+    );
+  });
+};
+createDots();
+const activateDot = function (slide) {
+  const dots = document.querySelectorAll('.dots__dot');
+  dots.forEach(function (dot) {
+    dot.classList.remove('dots__dot--active');
+  });
+  document
+    .querySelector(`.dots__dot[data-slide="${slide}"`)
+    .classList.add('dots__dot--active');
+};
+activateDot(0);
+const goToSlide = function (curSlide) {
+  slides.forEach((s, i) => {
+    s.style.transform = `translateX(${(i - curSlide) * 100}%)`;
+  });
+};
+
+const nextSlide = function () {
+  if (currentSlide === maxSlide - 1) {
+    currentSlide = 0;
+  } else {
+    currentSlide++;
+  }
+  goToSlide(currentSlide);
+  activateDot(currentSlide);
+};
+
+const previousSlide = function () {
+  if (currentSlide === 0) {
+    currentSlide = maxSlide - 1;
+  } else {
+    currentSlide--;
+  }
+  goToSlide(currentSlide);
+  activateDot(currentSlide);
+};
+
+goToSlide(0);
+sliderBtnRight.addEventListener('click', nextSlide);
+sliderBtnLeft.addEventListener('click', previousSlide);
+document.addEventListener('keydown', function (e) {
+  e.key === 'ArrowRight' && nextSlide();
+  e.key === 'ArrowLeft' && previousSlide();
+});
+dotBox.addEventListener('click', function (e) {
+  if (!e.target.classList.contains('dots__dot')) return;
+  const slide = e.target.dataset.slide;
+  goToSlide(slide);
+  activateDot(slide);
 });
