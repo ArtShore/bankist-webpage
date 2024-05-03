@@ -126,13 +126,13 @@ const navOpts = {
 };
 const headerObs = new IntersectionObserver(navCallback, navOpts);
 headerObs.observe(header);
-// revealing animation as you go down the page //
+// revealing animation as you go down the page using interseciton observer //
 const allSections = document.querySelectorAll('.section');
 const revealCallback = function (entries, observer) {
   const [entry] = entries;
   if (!entry.isIntersecting) return;
   entry.target.classList.remove('section--hidden');
-  observer.observe(entry.target); // for better performance
+  observer.unobserve(entry.target); // for better performance
 };
 const revealObserver = new IntersectionObserver(revealCallback, {
   root: null,
@@ -142,4 +142,24 @@ const revealObserver = new IntersectionObserver(revealCallback, {
 allSections.forEach(sect => {
   revealObserver.observe(sect);
   sect.classList.add('section--hidden');
+});
+// lazy loading the images //
+const lazyImgs = document.querySelectorAll('.features__img');
+const lazyLoadCallback = function (entries, observer) {
+  const [entry] = entries;
+  let currentImg = entry.target;
+  if (!entry.isIntersecting) return;
+  currentImg.src = currentImg.dataset.src;
+  currentImg.addEventListener('load', () => {
+    currentImg.classList.remove('lazy-img');
+  });
+  observer.unobserve(entry.target);
+};
+const lazyLoadObserver = new IntersectionObserver(lazyLoadCallback, {
+  root: null,
+  threshold: 0,
+  rootMargin: `200px`,
+});
+lazyImgs.forEach(img => {
+  lazyLoadObserver.observe(img);
 });
